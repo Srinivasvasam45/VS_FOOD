@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, MapPin, Clock, Phone, Share2, Sparkles, Utensils } from 'lucide-react';
+import { Star, MapPin, Clock, Phone, Share2, Sparkles, Utensils, CheckCircle2 } from 'lucide-react';
 import { formatDistance } from '../utils/formatters';
 
 const ProfileHeader = ({ partner, totalFoodCount = 0, activeTab, setActiveTab }) => {
@@ -15,7 +15,7 @@ const ProfileHeader = ({ partner, totalFoodCount = 0, activeTab, setActiveTab })
       try {
         await navigator.share({
           title: partner.restaurantName,
-          text: `Check out ${partner.restaurantName} on VS Food!`,
+          text: `Check out ${partner.restaurantName} on VS Food Reels!`,
           url,
         });
       } catch (e) {}
@@ -26,9 +26,9 @@ const ProfileHeader = ({ partner, totalFoodCount = 0, activeTab, setActiveTab })
   };
 
   return (
-    <div className="w-full rounded-3xl bg-slate-900/80 border border-slate-800/80 overflow-hidden shadow-2xl mb-8">
-      {/* Banner Cover Image */}
-      <div className="relative h-48 sm:h-64 w-full bg-slate-950 overflow-hidden">
+    <div className="w-full rounded-3xl glass-card border border-white/15 overflow-hidden shadow-glass-lg mb-8 relative">
+      {/* Banner Cover Image with Holographic Flare */}
+      <div className="relative h-52 sm:h-72 w-full bg-cosmic-950 overflow-hidden">
         <img
           src={
             partner.coverImage ||
@@ -37,79 +37,80 @@ const ProfileHeader = ({ partner, totalFoodCount = 0, activeTab, setActiveTab })
           alt={partner.restaurantName}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/30 to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-cosmic-950 via-cosmic-950/40 to-black/30" />
 
         <button
           onClick={handleShare}
-          className="absolute top-4 right-4 p-2.5 rounded-full glass-action-btn text-white hover:bg-black/60 transition-colors shadow-lg"
+          className="absolute top-4 right-4 p-3 rounded-full glass-action-btn text-white shadow-glass hover:scale-110 active:scale-95 transition-all"
           aria-label="Share Restaurant"
         >
           <Share2 size={18} />
         </button>
       </div>
 
-      {/* Main Profile Header info */}
-      <div className="px-6 pb-6 pt-0 relative">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-16 sm:-mt-20 mb-6">
-          {/* Avatar with Instagram-style Story Gradient Ring */}
-          <div className="relative inline-block">
-            <div className="p-1 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shadow-2xl">
+      {/* Main Profile Info Section */}
+      <div className="px-6 sm:px-8 pb-6 pt-0 relative">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 -mt-16 sm:-mt-20 mb-6">
+          {/* Avatar with Instagram-style Holographic Glowing Ring */}
+          <div className="relative inline-block group">
+            <div className="p-1 rounded-3xl bg-gradient-to-tr from-amber-500 via-neon-rose to-neon-indigo shadow-glass-lg group-hover:scale-105 transition-transform duration-500">
               <img
                 src={
                   partner.profileImage ||
                   'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=300&q=80'
                 }
                 alt={partner.restaurantName}
-                className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-slate-900"
+                className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl object-cover border-4 border-cosmic-950"
               />
             </div>
+            <span className="absolute bottom-1 right-1 p-1 rounded-full bg-neon-emerald ring-2 ring-cosmic-950" title="Verified Partner">
+              <CheckCircle2 size={14} className="text-cosmic-950 stroke-[3]" />
+            </span>
           </div>
 
           {/* Metrics bar */}
-          <div className="flex items-center gap-6 self-start sm:self-auto py-2">
-            <div className="text-center">
+          <div className="flex items-center gap-4 sm:gap-6 p-2 rounded-2xl glass-dock border border-white/10 self-start sm:self-auto shadow-glass">
+            <div className="text-center px-2">
               <span className="block text-lg sm:text-xl font-black text-white">
                 {totalFoodCount}
               </span>
-              <span className="text-[11px] text-slate-400 font-medium">Reels & Dishes</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Reels</span>
             </div>
-            <div className="w-px h-8 bg-slate-800" />
-            <div className="text-center">
+            <div className="w-px h-7 bg-white/10" />
+            <div className="text-center px-2">
               <span className="block text-lg sm:text-xl font-black text-amber-400 flex items-center justify-center gap-1">
-                <Star size={16} className="fill-amber-400" />
+                <Star size={15} className="fill-amber-400" />
                 {partner.rating || 4.7}
               </span>
-              <span className="text-[11px] text-slate-400 font-medium">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                 {partner.totalReviews || 0} Reviews
               </span>
             </div>
             {partner.distanceKm !== null && partner.distanceKm !== undefined && (
               <>
-                <div className="w-px h-8 bg-slate-800" />
-                <div className="text-center">
-                  <span className="block text-lg sm:text-xl font-black text-emerald-400 flex items-center justify-center gap-1">
-                    <MapPin size={16} />
+                <div className="w-px h-7 bg-white/10" />
+                <div className="text-center px-2">
+                  <span className="block text-lg sm:text-xl font-black text-neon-emerald flex items-center justify-center gap-1">
+                    <MapPin size={15} />
                     {partner.distanceKm} km
                   </span>
-                  <span className="text-[11px] text-slate-400 font-medium">Distance</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Distance</span>
                 </div>
               </>
             )}
           </div>
         </div>
 
-        {/* Restaurant Identity & Bio */}
-        <div className="space-y-3">
+        {/* Identity & Bio */}
+        <div className="space-y-3.5">
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                {partner.restaurantName}
-              </h1>
-            </div>
-            <p className="text-xs text-brand-400 font-bold">@{partner.username}</p>
+            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              {partner.restaurantName}
+            </h1>
+            <p className="text-xs text-neon-rose font-black mt-0.5">@{partner.username}</p>
           </div>
 
-          <p className="text-sm text-slate-300 max-w-3xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
             {partner.description || 'Authentic flavors, premium ingredients, and fresh preparation.'}
           </p>
 
@@ -118,26 +119,26 @@ const ProfileHeader = ({ partner, totalFoodCount = 0, activeTab, setActiveTab })
             {cuisines.map((c, idx) => (
               <span
                 key={idx}
-                className="px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700/80"
+                className="px-3.5 py-1 rounded-full text-xs font-bold glass-pill text-slate-200 border border-white/10"
               >
                 {c}
               </span>
             ))}
           </div>
 
-          {/* Details Row: Address, Hours, Phone */}
-          <div className="pt-3 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-400">
+          {/* Details Grid: Address, Hours, Phone */}
+          <div className="pt-4 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-400">
             <div className="flex items-center gap-2">
-              <MapPin size={14} className="text-brand-500 shrink-0" />
+              <MapPin size={14} className="text-neon-rose shrink-0" />
               <span className="truncate">{partner.address}, {partner.city}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Clock size={14} className="text-amber-400 shrink-0" />
+              <Clock size={14} className="text-neon-amber shrink-0" />
               <span>{partner.openingHours || '10:00 AM - 11:00 PM'}</span>
             </div>
             {partner.phone && (
               <div className="flex items-center gap-2">
-                <Phone size={14} className="text-emerald-400 shrink-0" />
+                <Phone size={14} className="text-neon-emerald shrink-0" />
                 <span>{partner.phone}</span>
               </div>
             )}
@@ -145,27 +146,27 @@ const ProfileHeader = ({ partner, totalFoodCount = 0, activeTab, setActiveTab })
         </div>
 
         {/* Instagram Profile Navigation Tabs */}
-        <div className="mt-8 border-t border-slate-800 flex items-center justify-center gap-8">
+        <div className="mt-8 border-t border-white/10 flex items-center justify-center gap-4 sm:gap-8 pt-1">
           <button
             onClick={() => setActiveTab('reels')}
-            className={`flex items-center gap-2 py-3 px-4 border-t-2 text-sm font-bold transition-all ${
+            className={`flex items-center gap-2 py-3 px-6 rounded-2xl text-xs font-black transition-all ${
               activeTab === 'reels'
-                ? 'border-brand-500 text-brand-400'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+                ? 'bg-gradient-to-r from-brand-600 to-neon-rose text-white shadow-neon-rose scale-105'
+                : 'text-slate-400 hover:text-white glass-pill border-transparent hover:border-white/10'
             }`}
           >
-            <Sparkles size={16} />
+            <Sparkles size={15} />
             <span>Food Reels Grid</span>
           </button>
           <button
             onClick={() => setActiveTab('menu')}
-            className={`flex items-center gap-2 py-3 px-4 border-t-2 text-sm font-bold transition-all ${
+            className={`flex items-center gap-2 py-3 px-6 rounded-2xl text-xs font-black transition-all ${
               activeTab === 'menu'
-                ? 'border-brand-500 text-brand-400'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+                ? 'bg-gradient-to-r from-brand-600 to-neon-rose text-white shadow-neon-rose scale-105'
+                : 'text-slate-400 hover:text-white glass-pill border-transparent hover:border-white/10'
             }`}
           >
-            <Utensils size={16} />
+            <Utensils size={15} />
             <span>Full Menu</span>
           </button>
         </div>

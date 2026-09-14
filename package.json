@@ -1,0 +1,30 @@
+{
+  "name": "vs-food-fullstack",
+  "version": "1.0.0",
+  "description": "VS Food - Futuristic Instagram Reels Food Discovery & Delivery Platform",
+  "main": "backend/server.js",
+  "scripts": {
+    "build": "npm --prefix backend install && npm --prefix frontend install && npm --prefix frontend run build",
+    "start": "node backend/server.js",
+    "server": "npm --prefix backend run dev",
+    "client": "npm --prefix frontend run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "seed": "node backend/seed.js",
+    "test": "node backend/test-backend.js"
+  },
+  "keywords": [
+    "food-delivery",
+    "reels",
+    "zomato",
+    "instagram",
+    "mern",
+    "mongodb",
+    "react",
+    "express"
+  ],
+  "author": "Srinivas",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Star, MapPin, ShoppingBag, Check, MessageCircle, ArrowLeft } from 'lucide-react';
+import { Star, MapPin, ShoppingBag, Check, MessageCircle, ArrowLeft, Store, Sparkles } from 'lucide-react';
 import { foodService } from '../services/foodService';
 import { reviewService } from '../services/reviewService';
 import { useCart } from '../context/CartContext';
@@ -103,16 +103,16 @@ const FoodDetail = () => {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-8">
       <Link
         to="/"
-        className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors"
+        className="inline-flex items-center gap-2 text-xs font-black text-slate-400 hover:text-white transition-colors glass-pill px-4 py-2 rounded-2xl border border-white/10"
       >
         <ArrowLeft size={16} />
         <span>Back to Reels Feed</span>
       </Link>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column: Vertical Video Player */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Left Column: Vertical Cinema Video Player */}
         <div className="lg:col-span-5 flex justify-center">
-          <div className="relative w-full max-w-[380px] aspect-[9/16] rounded-3xl overflow-hidden bg-black border border-slate-800 shadow-2xl">
+          <div className="relative w-full max-w-[380px] aspect-[9/16] rounded-3xl overflow-hidden bg-cosmic-950 border border-white/15 shadow-glass-lg group">
             <video
               src={food.videoUrl}
               poster={food.thumbnailUrl || food.imageUrl}
@@ -127,14 +127,14 @@ const FoodDetail = () => {
 
         {/* Right Column: Dish Info, Restaurant Card & Reviews */}
         <div className="lg:col-span-7 space-y-6">
-          <div className="space-y-3">
+          <div className="p-6 sm:p-8 rounded-3xl glass-card border border-white/15 shadow-glass-lg space-y-5">
             <div className="flex items-center gap-2">
               <div
-                className={`w-4 h-4 rounded-sm border ${badge.border} flex items-center justify-center p-0.5`}
+                className={`w-4 h-4 rounded-md border ${badge.border} flex items-center justify-center p-0.5 glass-dock`}
               >
-                <div className={`w-2 h-2 rounded-full ${badge.dot}`} />
+                <div className={`w-1.5 h-1.5 rounded-full ${badge.dot} shadow-[0_0_8px_currentColor]`} />
               </div>
-              <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+              <span className="text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full glass-dock text-slate-300 border border-white/10">
                 {food.category}
               </span>
             </div>
@@ -143,18 +143,18 @@ const FoodDetail = () => {
               {food.name}
             </h1>
 
-            <p className="text-sm text-slate-300 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
               {food.description || 'Prepared fresh with signature recipe and handpicked ingredients.'}
             </p>
 
             <div className="flex items-baseline gap-4 pt-2">
-              <span className="text-2xl font-black text-emerald-400">
+              <span className="text-2xl sm:text-3xl font-black text-neon-emerald drop-shadow-[0_0_12px_rgba(0,245,155,0.4)]">
                 {formatCurrency(food.price)}
               </span>
-              <div className="flex items-center gap-1 text-sm font-bold text-amber-400">
-                <Star size={16} className="fill-amber-400" />
+              <div className="flex items-center gap-1.5 text-sm font-black text-amber-400">
+                <Star size={17} className="fill-amber-400" />
                 <span>{food.rating || 4.5}</span>
-                <span className="text-slate-400 font-normal">
+                <span className="text-slate-400 font-medium">
                   ({food.totalReviews || reviews.length} reviews)
                 </span>
               </div>
@@ -164,12 +164,12 @@ const FoodDetail = () => {
               <button
                 onClick={handleAddToCart}
                 disabled={isAdding || justAdded || !food.isAvailable}
-                className={`w-full sm:w-auto px-8 py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-lg ${
+                className={`w-full sm:w-auto px-8 py-4 rounded-2xl text-xs sm:text-sm font-black flex items-center justify-center gap-2.5 transition-all shadow-lg active:scale-95 ${
                   justAdded
-                    ? 'bg-emerald-600 text-white shadow-emerald-600/30'
+                    ? 'bg-emerald-500 text-slate-950 shadow-neon-emerald'
                     : !food.isAvailable
                     ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-brand-600 to-rose-600 hover:from-brand-500 hover:to-rose-500 text-white shadow-brand-600/30 active:scale-95'
+                    : 'bg-gradient-to-r from-brand-600 via-rose-500 to-neon-rose text-white shadow-neon-rose hover:opacity-95'
                 }`}
               >
                 {isAdding ? (
@@ -192,22 +192,22 @@ const FoodDetail = () => {
           </div>
 
           {/* Restaurant Details Mini Card */}
-          <div className="p-4 rounded-3xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
+          <div className="p-5 rounded-3xl glass-card border border-white/10 flex items-center justify-between gap-4 shadow-glass">
+            <div className="flex items-center gap-3.5">
               <img
                 src={
                   partner.profileImage ||
                   'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=150&q=80'
                 }
                 alt={partner.restaurantName}
-                className="w-12 h-12 rounded-2xl object-cover border border-slate-700"
+                className="w-12 h-12 rounded-2xl object-cover border border-neon-rose/40"
               />
               <div>
-                <h4 className="text-sm font-bold text-white">
+                <h4 className="text-sm font-black text-white">
                   {partner.restaurantName}
                 </h4>
-                <p className="text-xs text-slate-400 flex items-center gap-1">
-                  <MapPin size={12} className="text-brand-500" />
+                <p className="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5">
+                  <MapPin size={12} className="text-neon-rose" />
                   <span>{food.distanceKm !== null ? formatDistance(food.distanceKm) : partner.city}</span>
                 </p>
               </div>
@@ -215,52 +215,52 @@ const FoodDetail = () => {
 
             <Link
               to={`/restaurant/${partner.username || partner._id}`}
-              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-colors"
+              className="px-4 py-2 rounded-xl glass-action-btn text-slate-200 text-xs font-bold transition-all hover:border-white/30"
             >
               View Menu
             </Link>
           </div>
 
           {/* Customer Reviews Section */}
-          <div className="pt-4 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <MessageCircle size={18} className="text-brand-400" />
+          <div className="p-6 sm:p-8 rounded-3xl glass-card border border-white/10 space-y-4 shadow-glass">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <h3 className="text-base font-black text-white flex items-center gap-2">
+                <MessageCircle size={18} className="text-neon-rose" />
                 <span>Customer Reviews</span>
               </h3>
 
               {isAuthenticated && (
                 <button
                   onClick={() => setIsReviewOpen(true)}
-                  className="text-xs font-bold text-brand-400 hover:text-brand-300"
+                  className="text-xs font-black text-neon-rose hover:underline"
                 >
                   Write a Review
                 </button>
               )}
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3 pt-1">
               {reviews.length === 0 ? (
-                <p className="text-xs text-slate-500 italic">
+                <p className="text-xs text-slate-400 italic">
                   No reviews written yet. Be the first to share your thoughts!
                 </p>
               ) : (
                 reviews.map((rev) => (
                   <div
                     key={rev._id}
-                    className="p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800/80 space-y-1.5"
+                    className="p-4 rounded-2xl glass-dock border border-white/5 space-y-1.5"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-200">
+                      <span className="text-xs font-bold text-white">
                         {rev.user?.name || 'Customer'}
                       </span>
-                      <div className="flex items-center gap-0.5 text-amber-400 text-xs font-bold">
+                      <div className="flex items-center gap-1 text-amber-400 text-xs font-black">
                         <Star size={12} className="fill-amber-400" />
                         <span>{rev.rating}</span>
                       </div>
                     </div>
-                    <p className="text-xs text-slate-300">{rev.comment}</p>
-                    <span className="text-[10px] text-slate-500 block">
+                    <p className="text-xs text-slate-300 leading-relaxed">{rev.comment}</p>
+                    <span className="text-[10px] text-slate-500 block pt-0.5">
                       {formatDate(rev.createdAt)}
                     </span>
                   </div>

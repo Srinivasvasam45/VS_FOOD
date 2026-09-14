@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Phone, Mail, ShieldCheck, Check, LogOut, ReceiptText, Sparkles } from 'lucide-react';
+import { User, Phone, Mail, ShieldCheck, Check, LogOut, ReceiptText, Sparkles, Save } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/authService';
 import { Link, useNavigate } from 'react-router-dom';
@@ -58,35 +58,37 @@ const UserProfile = () => {
         </p>
       </div>
 
-      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-6">
+      <div className="p-6 sm:p-8 rounded-3xl glass-card border border-white/15 shadow-glass-lg space-y-6">
         {/* Avatar & Header */}
-        <div className="flex items-center gap-4 pb-6 border-b border-slate-800">
-          <img
-            src={
-              formData.profileImage ||
-              'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80'
-            }
-            alt={user?.name}
-            className="w-16 h-16 rounded-full object-cover border-2 border-brand-500 shadow-md"
-          />
+        <div className="flex items-center gap-4 pb-6 border-b border-white/10">
+          <div className="p-1 rounded-2xl bg-gradient-to-tr from-brand-500 via-neon-rose to-amber-500 shadow-glass">
+            <img
+              src={
+                formData.profileImage ||
+                'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80'
+              }
+              alt={user?.name}
+              className="w-16 h-16 rounded-2xl object-cover border-2 border-cosmic-950"
+            />
+          </div>
           <div>
-            <h2 className="text-lg font-bold text-white">{user?.name}</h2>
-            <p className="text-xs text-slate-400">{user?.email}</p>
-            <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-500/20 text-brand-400 border border-brand-500/30 uppercase tracking-wider">
+            <h2 className="text-lg font-black text-white">{user?.name}</h2>
+            <p className="text-xs text-slate-400 mt-0.5">{user?.email}</p>
+            <span className="inline-block mt-2 px-3 py-0.5 rounded-full text-[9px] font-black bg-brand-500/20 text-neon-rose border border-brand-500/30 uppercase tracking-widest">
               {user?.role}
             </span>
           </div>
         </div>
 
         {successMsg && (
-          <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-400 flex items-center gap-2">
+          <div className="p-3.5 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-xs text-neon-emerald flex items-center gap-2">
             <Check size={16} />
             <span>{successMsg}</span>
           </div>
         )}
 
         {errorMsg && (
-          <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-400">
+          <div className="p-3.5 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-xs text-rose-400">
             {errorMsg}
           </div>
         )}
@@ -94,7 +96,7 @@ const UserProfile = () => {
         {/* Profile Update Form */}
         <form onSubmit={handleUpdate} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            <label className="block text-xs font-bold text-slate-300 mb-1.5">
               Full Name
             </label>
             <input
@@ -103,24 +105,24 @@ const UserProfile = () => {
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-2xl bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:border-brand-500"
+              className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white focus:outline-none focus:border-neon-rose"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            <label className="block text-xs font-bold text-slate-300 mb-1.5">
               Email Address (Permanent)
             </label>
             <input
               type="email"
               value={user?.email || ''}
               disabled
-              className="w-full px-4 py-3 rounded-2xl bg-slate-800/50 border border-slate-800 text-xs text-slate-500 cursor-not-allowed"
+              className="w-full px-4 py-3 rounded-2xl glass-dock border border-white/5 text-xs text-slate-500 cursor-not-allowed"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            <label className="block text-xs font-bold text-slate-300 mb-1.5">
               Phone Number
             </label>
             <input
@@ -129,12 +131,12 @@ const UserProfile = () => {
               value={formData.phone}
               onChange={handleChange}
               placeholder="+91 98765 43210"
-              className="w-full px-4 py-3 rounded-2xl bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:border-brand-500"
+              className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white focus:outline-none focus:border-neon-rose"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            <label className="block text-xs font-bold text-slate-300 mb-1.5">
               Profile Avatar Image URL
             </label>
             <input
@@ -143,23 +145,24 @@ const UserProfile = () => {
               value={formData.profileImage}
               onChange={handleChange}
               placeholder="https://images.unsplash.com/..."
-              className="w-full px-4 py-3 rounded-2xl bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:border-brand-500"
+              className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white focus:outline-none focus:border-neon-rose"
             />
           </div>
 
-          <div className="pt-2 flex items-center justify-between">
+          <div className="pt-3 flex items-center justify-between">
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-3 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition-all shadow-md shadow-brand-600/30"
+              className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-brand-600 to-neon-rose hover:opacity-95 text-white text-xs font-black transition-all shadow-neon-rose flex items-center gap-2 active:scale-95"
             >
-              {loading ? 'Saving...' : 'Save Profile Changes'}
+              <Save size={15} />
+              <span>{loading ? 'Saving...' : 'Save Profile Changes'}</span>
             </button>
 
             <button
               type="button"
               onClick={handleSignOut}
-              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-rose-500/20 text-rose-400 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              className="px-4 py-2.5 rounded-2xl glass-dock hover:bg-rose-500/20 text-rose-400 text-xs font-bold flex items-center gap-1.5 transition-colors border border-rose-500/20"
             >
               <LogOut size={14} />
               <span>Log Out</span>

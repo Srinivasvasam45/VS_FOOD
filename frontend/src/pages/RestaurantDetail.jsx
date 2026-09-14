@@ -84,17 +84,17 @@ const RestaurantDetail = () => {
       {activeTab === 'reels' && (
         <div>
           {foods.length === 0 ? (
-            <div className="py-16 text-center text-slate-400 space-y-2">
-              <Sparkles size={36} className="mx-auto text-slate-600" />
-              <p className="text-sm font-semibold">No food reels posted yet.</p>
+            <div className="py-16 text-center text-slate-400 space-y-3 rounded-3xl glass-card border border-white/10 p-8 max-w-md mx-auto shadow-glass">
+              <Sparkles size={36} className="mx-auto text-amber-400/60" />
+              <p className="text-sm font-bold text-white">No food reels posted yet.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
               {foods.map((food) => (
                 <div
                   key={food._id}
                   onClick={() => setSelectedReelFood(food)}
-                  className="group relative aspect-[9/16] rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 cursor-pointer shadow-md hover:border-brand-500/50 transition-all hover:scale-[1.02]"
+                  className="group relative aspect-[9/16] rounded-3xl overflow-hidden bg-cosmic-950 border border-white/10 cursor-pointer shadow-glass hover:border-neon-rose/60 transition-all hover:scale-[1.03]"
                 >
                   <img
                     src={
@@ -103,33 +103,33 @@ const RestaurantDetail = () => {
                       'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80'
                     }
                     alt={food.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     loading="lazy"
                   />
 
                   {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/30 group-hover:from-black/95 transition-all" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-cosmic-950/95 via-transparent to-black/30 group-hover:from-cosmic-950/98 transition-all" />
 
                   {/* Play Icon Badge */}
-                  <div className="absolute top-2.5 right-2.5 p-1.5 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20">
-                    <Play size={12} className="fill-white" />
+                  <div className="absolute top-3 right-3 p-2 rounded-2xl glass-dock text-white border border-white/20 shadow-glass group-hover:scale-110 transition-transform">
+                    <Play size={12} className="fill-neon-rose text-neon-rose" />
                   </div>
 
                   {/* Category Pill */}
-                  <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md text-[10px] font-bold text-white border border-white/10">
+                  <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-lg glass-dock text-[10px] font-black uppercase tracking-wider text-white border border-white/10">
                     {food.category}
                   </div>
 
                   {/* Bottom details inside grid cell */}
-                  <div className="absolute bottom-0 left-0 right-0 p-3 text-left">
-                    <p className="text-xs font-bold text-white truncate drop-shadow">
+                  <div className="absolute bottom-0 left-0 right-0 p-3.5 text-left">
+                    <p className="text-xs font-black text-white truncate drop-shadow">
                       {food.name}
                     </p>
                     <div className="flex items-center justify-between mt-1">
-                      <span className="text-xs font-black text-emerald-400">
+                      <span className="text-xs font-black text-neon-emerald">
                         {formatCurrency(food.price)}
                       </span>
-                      <span className="text-[10px] font-bold text-amber-400">
+                      <span className="text-[10px] font-black text-amber-400">
                         ⭐ {food.rating || 4.5}
                       </span>
                     </div>
@@ -154,13 +154,13 @@ const RestaurantDetail = () => {
 
       {/* Modal Popup Viewer when clicking a reel from the grid */}
       {selectedReelFood && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-slate-950/90 backdrop-blur-md animate-fade-in">
-          <div className="relative w-full max-w-[420px] h-full sm:h-[800px] max-h-full sm:rounded-3xl overflow-hidden bg-black shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-cosmic-950/90 backdrop-blur-2xl animate-fade-in">
+          <div className="relative w-full max-w-[430px] h-full sm:h-[800px] max-h-full sm:rounded-3xl overflow-hidden bg-black shadow-glass-lg border-0 sm:border sm:border-white/15">
             <button
               onClick={() => setSelectedReelFood(null)}
-              className="absolute top-4 left-4 z-40 p-2 rounded-full glass-action-btn text-white hover:bg-black/80 transition-colors"
+              className="absolute top-4 left-4 z-40 p-2.5 rounded-full glass-action-btn text-white shadow-glass hover:scale-110 active:scale-95 transition-all"
             >
-              <X size={20} />
+              <X size={18} />
             </button>
 
             <ReelCard

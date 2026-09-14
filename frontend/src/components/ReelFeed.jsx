@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReelCard from './ReelCard';
 import LoadingSpinner from './LoadingSpinner';
-import { Utensils, RefreshCw } from 'lucide-react';
+import { Utensils, RefreshCw, Flame, Sparkles } from 'lucide-react';
 
 const ReelFeed = ({ foods = [], loading = false, onRefresh }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -65,7 +65,7 @@ const ReelFeed = ({ foods = [], loading = false, onRefresh }) => {
 
   if (loading && foods.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[600px]">
+      <div className="flex flex-col items-center justify-center min-h-[620px]">
         <LoadingSpinner size="lg" message="Loading mouth-watering food reels..." />
       </div>
     );
@@ -73,18 +73,20 @@ const ReelFeed = ({ foods = [], loading = false, onRefresh }) => {
 
   if (foods.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[500px] text-center p-8 bg-slate-900/40 rounded-3xl border border-slate-800/80 max-w-md mx-auto my-8">
-        <div className="w-16 h-16 rounded-3xl bg-brand-500/15 border border-brand-500/30 flex items-center justify-center text-brand-400 mb-4">
-          <Utensils size={32} />
+      <div className="flex flex-col items-center justify-center min-h-[500px] text-center p-8 rounded-3xl glass-card max-w-md mx-auto my-8 border border-white/10 shadow-glass-lg animate-fade-in">
+        <div className="w-16 h-16 rounded-3xl bg-brand-600/20 border border-brand-500/30 flex items-center justify-center text-neon-rose mb-4 shadow-neon-rose">
+          <Flame size={32} />
         </div>
-        <h3 className="text-xl font-bold text-white mb-2">No Food Reels Available</h3>
-        <p className="text-sm text-slate-400 mb-6">
+        <h3 className="text-xl font-black text-white mb-2 tracking-tight">
+          No Food Reels Found
+        </h3>
+        <p className="text-xs text-slate-400 mb-6 leading-relaxed">
           No food videos match your current category or search filter. Try clearing your filters or check back soon!
         </p>
         {onRefresh && (
           <button
             onClick={onRefresh}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition-colors shadow-lg shadow-brand-600/30"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-brand-600 to-neon-rose text-white text-xs font-black transition-all shadow-neon-rose active:scale-95"
           >
             <RefreshCw size={14} />
             <span>Refresh Reels</span>
@@ -99,7 +101,7 @@ const ReelFeed = ({ foods = [], loading = false, onRefresh }) => {
       {/* Centered Reel Container */}
       <div
         ref={containerRef}
-        className="w-full max-w-[440px] h-[calc(100vh-4.5rem)] md:h-[800px] overflow-y-scroll snap-y-mandatory no-scrollbar rounded-none md:rounded-3xl border-0 md:border md:border-slate-800 bg-black shadow-2xl relative"
+        className="w-full max-w-[440px] h-[calc(100vh-5.5rem)] md:h-[800px] overflow-y-scroll snap-y-mandatory no-scrollbar rounded-none md:rounded-3xl border-0 md:border md:border-white/10 bg-cosmic-950 shadow-glass-lg relative"
       >
         {foods.map((food, index) => (
           <div

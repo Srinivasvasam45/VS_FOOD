@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Flame, User, Store, Mail, Lock, Phone, MapPin, ArrowRight } from 'lucide-react';
+import { Flame, User, Store, Mail, Lock, Phone, MapPin, ArrowRight, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Register = () => {
@@ -78,15 +78,21 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-lg p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl space-y-6">
+    <div className="min-h-[calc(100vh-6rem)] flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-xl p-8 sm:p-10 rounded-3xl glass-card border border-white/15 shadow-glass-lg space-y-6 relative overflow-hidden">
+        {/* Decorative Top Glow */}
+        <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-60 h-60 bg-neon-rose/15 rounded-full blur-3xl pointer-events-none" />
+
         {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-rose-500 flex items-center justify-center text-white mx-auto shadow-lg shadow-brand-600/30">
-            <Flame size={26} className="fill-white" />
+        <div className="text-center space-y-2 relative">
+          <div className="relative inline-block mb-1">
+            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-brand-600 to-neon-rose blur-md opacity-80" />
+            <div className="relative w-14 h-14 rounded-2xl bg-cosmic-950 border border-white/20 flex items-center justify-center text-neon-rose shadow-glass">
+              <Flame size={28} className="fill-neon-rose animate-pulse" />
+            </div>
           </div>
-          <h1 className="text-2xl font-black text-white tracking-tight">
-            Create an Account
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            Create Your Account
           </h1>
           <p className="text-xs text-slate-400">
             Join VS Food to watch food reels, order, or partner with us
@@ -94,13 +100,13 @@ const Register = () => {
         </div>
 
         {/* Role Selector Tabs */}
-        <div className="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-slate-800 border border-slate-700">
+        <div className="grid grid-cols-2 gap-2 p-1.5 rounded-3xl glass-dock border border-white/10 shadow-glass">
           <button
             type="button"
             onClick={() => setRole('user')}
-            className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-black transition-all ${
               role === 'user'
-                ? 'bg-brand-600 text-white shadow-md'
+                ? 'bg-gradient-to-r from-brand-600 to-neon-rose text-white shadow-neon-rose scale-105'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -111,19 +117,19 @@ const Register = () => {
           <button
             type="button"
             onClick={() => setRole('foodPartner')}
-            className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-black transition-all ${
               role === 'foodPartner'
-                ? 'bg-amber-500 text-slate-950 shadow-md font-black'
+                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-neon-amber font-black scale-105'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
             <Store size={15} />
-            <span>Food Partner</span>
+            <span>Restaurant Partner</span>
           </button>
         </div>
 
         {error && (
-          <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-400 text-center">
+          <div className="p-3.5 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-xs text-rose-400 text-center">
             {error}
           </div>
         )}
@@ -131,7 +137,7 @@ const Register = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-bold text-slate-300 mb-1.5">
                 {role === 'foodPartner' ? 'Owner / Manager Name *' : 'Full Name *'}
               </label>
               <input
@@ -141,12 +147,12 @@ const Register = () => {
                 onChange={handleChange}
                 required
                 placeholder="John Doe"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+                className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white placeholder-slate-500 focus:outline-none focus:border-neon-rose"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-bold text-slate-300 mb-1.5">
                 Phone Number
               </label>
               <input
@@ -155,14 +161,14 @@ const Register = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="+91 98765 43210"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+                className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white placeholder-slate-500 focus:outline-none focus:border-neon-rose"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-bold text-slate-300 mb-1.5">
                 Email Address *
               </label>
               <input
@@ -172,12 +178,12 @@ const Register = () => {
                 onChange={handleChange}
                 required
                 placeholder="user@example.com"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+                className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white placeholder-slate-500 focus:outline-none focus:border-neon-rose"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-bold text-slate-300 mb-1.5">
                 Password (min 6 chars) *
               </label>
               <input
@@ -187,22 +193,22 @@ const Register = () => {
                 onChange={handleChange}
                 required
                 placeholder="••••••••"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+                className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white placeholder-slate-500 focus:outline-none focus:border-neon-rose"
               />
             </div>
           </div>
 
           {/* Food Partner Specific Fields */}
           {role === 'foodPartner' && (
-            <div className="p-4 rounded-2xl bg-slate-800/40 border border-slate-800 space-y-4 animate-fade-in">
-              <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-                <Store size={14} />
+            <div className="p-5 rounded-3xl glass-dock border border-amber-500/30 space-y-4 shadow-glass animate-fade-in">
+              <h3 className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                <Store size={15} />
                 <span>Restaurant Information</span>
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  <label className="block text-xs font-bold text-slate-300 mb-1.5">
                     Restaurant Name *
                   </label>
                   <input
@@ -211,13 +217,13 @@ const Register = () => {
                     value={formData.restaurantName}
                     onChange={handleChange}
                     required={role === 'foodPartner'}
-                    placeholder="e.g. Spice Kitchen"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    placeholder="e.g. Royal Biryani House"
+                    className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  <label className="block text-xs font-bold text-slate-300 mb-1.5">
                     Handle / Username
                   </label>
                   <input
@@ -225,15 +231,15 @@ const Register = () => {
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
-                    placeholder="e.g. spicekitchen"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    placeholder="e.g. royalbiryani"
+                    className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Restaurant Address *
+                <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                  Restaurant Street Address *
                 </label>
                 <input
                   type="text"
@@ -242,13 +248,13 @@ const Register = () => {
                   onChange={handleChange}
                   required={role === 'foodPartner'}
                   placeholder="Plot 10, Road No 36, Jubilee Hills"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                  className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  <label className="block text-xs font-bold text-slate-300 mb-1.5">
                     City *
                   </label>
                   <input
@@ -257,12 +263,12 @@ const Register = () => {
                     value={formData.city}
                     onChange={handleChange}
                     required={role === 'foodPartner'}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  <label className="block text-xs font-bold text-slate-300 mb-1.5">
                     Cuisines (comma separated)
                   </label>
                   <input
@@ -270,8 +276,8 @@ const Register = () => {
                     name="cuisine"
                     value={formData.cuisine}
                     onChange={handleChange}
-                    placeholder="Biryani, Mughlai, North Indian"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    placeholder="Biryani, Mughlai, Kebabs"
+                    className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
@@ -281,10 +287,10 @@ const Register = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3.5 rounded-2xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-lg active:scale-[0.98] ${
+            className={`w-full py-4 rounded-2xl text-xs font-black flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95 ${
               role === 'foodPartner'
-                ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 font-black shadow-amber-500/30'
-                : 'bg-gradient-to-r from-brand-600 to-rose-600 hover:from-brand-500 hover:to-rose-500 text-white shadow-brand-600/30'
+                ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:opacity-95 text-slate-950 shadow-neon-amber font-black'
+                : 'bg-gradient-to-r from-brand-600 via-rose-500 to-neon-rose hover:opacity-95 text-white shadow-neon-rose'
             }`}
           >
             {loading ? (
@@ -298,10 +304,10 @@ const Register = () => {
           </button>
         </form>
 
-        <div className="pt-4 border-t border-slate-800 text-center">
+        <div className="pt-4 border-t border-white/10 text-center">
           <p className="text-xs text-slate-400">
             Already have an account?{' '}
-            <Link to="/login" className="font-bold text-brand-400 hover:text-brand-300">
+            <Link to="/login" className="font-bold text-neon-rose hover:underline">
               Sign In
             </Link>
           </p>

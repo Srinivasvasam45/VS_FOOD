@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation as useRouteLocation } from 'react-router-dom';
 import {
   Flame,
@@ -12,6 +12,7 @@ import {
   LayoutDashboard,
   UtensilsCrossed,
   Sparkles,
+  Search,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
@@ -22,8 +23,17 @@ const Navbar = () => {
   const { itemCount, setIsDrawerOpen } = useCart();
   const { locationName, coords, isLocating, requestLocation } = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const routeLocation = useRouteLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleLogout = async () => {
     await logout();
@@ -34,109 +44,123 @@ const Navbar = () => {
   const isActive = (path) => routeLocation.pathname === path;
 
   return (
-    <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/80 transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2.5 group shrink-0">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-600 via-rose-500 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-brand-600/30 group-hover:scale-105 transition-transform duration-300">
-            <Flame size={22} className="fill-white animate-pulse" />
+    <header className="sticky top-0 z-40 w-full px-3 sm:px-6 lg:px-8 pt-3 pb-2 transition-all duration-300">
+      <div
+        className={`max-w-7xl mx-auto rounded-3xl glass-dock transition-all duration-300 px-4 sm:px-6 h-16 flex items-center justify-between gap-4 ${
+          scrolled ? 'shadow-glass-lg border-white/15 bg-cosmic-900/85' : 'border-white/10'
+        }`}
+      >
+        {/* Brand Logo with Neon Flare */}
+        <Link to="/" className="flex items-center gap-3 group shrink-0">
+          <div className="relative">
+            {/* Ambient Logo Glow */}
+            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-brand-600 via-neon-rose to-neon-amber opacity-75 blur-md group-hover:opacity-100 transition duration-300 group-hover:scale-110" />
+            <div className="relative w-10 h-10 rounded-2xl bg-gradient-to-tr from-cosmic-900 to-cosmic-800 border border-white/20 flex items-center justify-center text-white shadow-lg">
+              <Flame size={22} className="text-neon-rose fill-neon-rose animate-pulse" />
+            </div>
           </div>
+
           <div>
-            <span className="text-xl font-black tracking-tight text-white flex items-center gap-1">
-              VS<span className="text-brand-500">FOOD</span>
-              <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-500/20 text-brand-400 border border-brand-500/30">
-                REELS
+            <span className="text-xl font-black tracking-tight text-white flex items-center gap-1.5">
+              VS<span className="text-neon-rose font-extrabold">FOOD</span>
+              <span className="relative flex items-center">
+                <span className="px-2 py-0.5 rounded-full text-[9px] font-black tracking-wider bg-gradient-to-r from-brand-600/30 to-neon-rose/30 text-neon-rose border border-brand-500/40 uppercase shadow-neon-rose">
+                  REELS
+                </span>
               </span>
             </span>
           </div>
         </Link>
 
-        {/* Location pill */}
+        {/* Dynamic Location Chip */}
         <button
           onClick={requestLocation}
-          className="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-700/60 text-xs font-medium text-slate-300 hover:text-white hover:border-slate-600 transition-colors max-w-[220px]"
-          title="Click to refresh current location"
+          className="hidden md:flex items-center gap-2.5 px-3.5 py-1.5 rounded-2xl glass-pill text-xs font-medium text-slate-300 hover:text-white hover:border-brand-500/40 transition-all max-w-[210px] group shadow-inner"
+          title="Click to refresh current GPS location"
         >
-          <MapPin size={14} className="text-brand-500 shrink-0" />
+          <div className="relative flex items-center justify-center">
+            <span className="absolute w-2.5 h-2.5 rounded-full bg-neon-emerald opacity-75 animate-ping" />
+            <span className="relative w-1.5 h-1.5 rounded-full bg-neon-emerald" />
+          </div>
+          <MapPin size={13} className="text-neon-rose group-hover:scale-110 transition-transform shrink-0" />
           <span className="truncate">
-            {isLocating ? 'Locating GPS...' : coords ? locationName : '📍 Location unavailable'}
+            {isLocating ? 'Acquiring GPS...' : coords ? locationName : '📍 Set Location'}
           </span>
-          <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-ping" />
         </button>
 
         {/* Navigation items (Desktop) */}
-        <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+        <nav className="hidden md:flex items-center gap-1.5 p-1 rounded-2xl bg-cosmic-950/60 border border-white/5">
           <Link
             to="/"
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all relative ${
               isActive('/')
-                ? 'bg-brand-500/15 text-brand-400 border border-brand-500/30'
-                : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                ? 'text-white bg-gradient-to-r from-brand-600/30 to-neon-rose/20 border border-brand-500/40 shadow-neon-rose'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
             }`}
           >
-            <Flame size={17} />
+            <Flame size={15} className={isActive('/') ? 'text-neon-rose fill-neon-rose' : ''} />
             <span>Reels Feed</span>
           </Link>
 
           <Link
             to="/explore"
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all relative ${
               isActive('/explore')
-                ? 'bg-brand-500/15 text-brand-400 border border-brand-500/30'
-                : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                ? 'text-white bg-gradient-to-r from-brand-600/30 to-neon-rose/20 border border-brand-500/40 shadow-neon-rose'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
             }`}
           >
-            <Compass size={17} />
+            <Compass size={15} className={isActive('/explore') ? 'text-neon-cyan' : ''} />
             <span>Explore</span>
           </Link>
 
           {isAuthenticated && (
             <Link
               to="/orders"
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all relative ${
                 isActive('/orders')
-                  ? 'bg-brand-500/15 text-brand-400 border border-brand-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                  ? 'text-white bg-gradient-to-r from-brand-600/30 to-neon-rose/20 border border-brand-500/40 shadow-neon-rose'
+                  : 'text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
-              <ReceiptText size={17} />
-              <span>My Orders</span>
+              <ReceiptText size={15} className={isActive('/orders') ? 'text-neon-amber' : ''} />
+              <span>Orders</span>
             </Link>
           )}
         </nav>
 
         {/* Right side actions */}
         <div className="flex items-center gap-3">
-          {/* Cart button */}
+          {/* Cart button with floating badge */}
           <button
             onClick={() => setIsDrawerOpen(true)}
-            className="relative p-2.5 rounded-2xl bg-slate-900 border border-slate-700/80 text-slate-200 hover:text-white hover:border-brand-500/50 transition-all shadow-md group"
+            className="relative p-2.5 rounded-2xl glass-pill hover:border-neon-rose/50 text-slate-200 hover:text-white transition-all shadow-glass group active:scale-95"
             aria-label="View Cart"
           >
-            <ShoppingBag size={20} className="group-hover:scale-110 transition-transform" />
+            <ShoppingBag size={19} className="group-hover:scale-110 group-hover:text-neon-rose transition-all" />
             {itemCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-brand-600 text-white text-[11px] font-black flex items-center justify-center shadow-lg shadow-brand-600/50 animate-bounce">
+              <span className="absolute -top-1.5 -right-1.5 min-w-[22px] h-5 px-1.5 rounded-full bg-gradient-to-r from-brand-600 to-neon-rose text-white text-[10px] font-black flex items-center justify-center shadow-neon-rose animate-bounce">
                 {itemCount}
               </span>
             )}
           </button>
 
-          {/* Partner switch or portal button */}
+          {/* Partner portal shortcut */}
           {isFoodPartner ? (
             <Link
               to="/partner/dashboard"
-              className="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-300 hover:bg-amber-500/25 text-xs font-bold transition-colors"
+              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/40 text-amber-300 hover:border-amber-400 text-xs font-bold transition-all shadow-neon-amber active:scale-95"
             >
-              <LayoutDashboard size={15} />
-              <span>Partner Portal</span>
+              <LayoutDashboard size={14} className="text-amber-400" />
+              <span>Partner Hub</span>
             </Link>
           ) : (
             <Link
               to="/register?role=foodPartner"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white text-xs font-medium transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl glass-pill hover:border-brand-500/40 text-slate-300 hover:text-white text-xs font-semibold transition-all group"
             >
-              <UtensilsCrossed size={14} className="text-brand-400" />
-              <span>Add Restaurant</span>
+              <UtensilsCrossed size={14} className="text-brand-400 group-hover:rotate-12 transition-transform" />
+              <span>For Restaurants</span>
             </Link>
           )}
 
@@ -145,14 +169,16 @@ const Navbar = () => {
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-2 p-1.5 rounded-full bg-slate-900 border border-slate-700/80 hover:border-slate-600 transition-colors"
+                className="flex items-center gap-2 p-1 rounded-full glass-pill hover:border-white/30 transition-all active:scale-95"
               >
-                <img
-                  src={user?.profileImage || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80'}
-                  alt={user?.name}
-                  className="w-8 h-8 rounded-full object-cover border border-slate-600"
-                />
-                <ChevronDown size={14} className="text-slate-400 pr-1" />
+                <div className="p-0.5 rounded-full bg-gradient-to-tr from-brand-500 via-neon-rose to-amber-500">
+                  <img
+                    src={user?.profileImage || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80'}
+                    alt={user?.name}
+                    className="w-7 h-7 rounded-full object-cover border border-cosmic-950"
+                  />
+                </div>
+                <ChevronDown size={13} className="text-slate-400 pr-1" />
               </button>
 
               {/* Dropdown Menu */}
@@ -162,22 +188,22 @@ const Navbar = () => {
                     className="fixed inset-0 z-40"
                     onClick={() => setDropdownOpen(false)}
                   />
-                  <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-slate-900 border border-slate-700/90 shadow-2xl z-50 p-2 py-2.5 divide-y divide-slate-800 animate-fade-in">
-                    <div className="px-3 py-2">
-                      <p className="text-sm font-bold text-white truncate">{user?.name}</p>
-                      <p className="text-xs text-slate-400 truncate">{user?.email}</p>
-                      <span className="inline-block mt-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700 uppercase tracking-wider">
+                  <div className="absolute right-0 mt-3 w-60 rounded-3xl glass-dock shadow-glass-lg z-50 p-2.5 divide-y divide-white/10 animate-fade-in border border-white/15">
+                    <div className="px-3.5 py-2.5">
+                      <p className="text-xs font-bold text-white truncate">{user?.name}</p>
+                      <p className="text-[11px] text-slate-400 truncate mt-0.5">{user?.email}</p>
+                      <span className="inline-block mt-2 px-2.5 py-0.5 rounded-full text-[9px] font-black bg-brand-500/20 text-brand-300 border border-brand-500/30 uppercase tracking-widest">
                         {user?.role}
                       </span>
                     </div>
 
-                    <div className="py-1">
+                    <div className="py-1.5 space-y-1">
                       {isFoodPartner ? (
                         <>
                           <Link
                             to="/partner/dashboard"
                             onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-amber-300 hover:bg-slate-800 transition-colors"
+                            className="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl text-xs font-bold text-amber-300 hover:bg-white/10 transition-colors"
                           >
                             <LayoutDashboard size={15} />
                             <span>Partner Dashboard</span>
@@ -185,7 +211,7 @@ const Navbar = () => {
                           <Link
                             to="/partner/food"
                             onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
+                            className="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl text-xs font-semibold text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
                           >
                             <Sparkles size={15} />
                             <span>Manage Food Reels</span>
@@ -195,27 +221,27 @@ const Navbar = () => {
                         <Link
                           to="/profile"
                           onClick={() => setDropdownOpen(false)}
-                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
+                          className="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl text-xs font-semibold text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
                         >
                           <User size={15} />
-                          <span>My Profile</span>
+                          <span>My Account</span>
                         </Link>
                       )}
 
                       <Link
                         to="/orders"
                         onClick={() => setDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
+                        className="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl text-xs font-semibold text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
                       >
                         <ReceiptText size={15} />
                         <span>Order History</span>
                       </Link>
                     </div>
 
-                    <div className="pt-1">
+                    <div className="pt-1.5">
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-400 hover:bg-rose-500/10 transition-colors text-left"
+                        className="w-full flex items-center gap-2.5 px-3.5 py-2 rounded-2xl text-xs font-semibold text-rose-400 hover:bg-rose-500/15 transition-colors text-left"
                       >
                         <LogOut size={15} />
                         <span>Sign Out</span>
@@ -229,15 +255,16 @@ const Navbar = () => {
             <div className="flex items-center gap-2">
               <Link
                 to="/login"
-                className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-200 hover:text-white hover:bg-slate-800/80 transition-colors"
+                className="px-4 py-2 rounded-2xl text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
               >
                 Sign In
               </Link>
               <Link
                 to="/register"
-                className="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow-md shadow-brand-600/30 transition-all"
+                className="relative group px-4 py-2 rounded-2xl overflow-hidden shadow-neon-rose active:scale-95 transition-all"
               >
-                Sign Up
+                <div className="absolute inset-0 bg-gradient-to-r from-brand-600 via-rose-500 to-neon-rose group-hover:scale-105 transition-transform" />
+                <span className="relative text-xs font-black text-white">Sign Up</span>
               </Link>
             </div>
           )}

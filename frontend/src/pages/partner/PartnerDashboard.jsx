@@ -72,6 +72,7 @@ const PartnerDashboard = () => {
       icon: Sparkles,
       color: 'from-blue-600 to-indigo-600',
       textColor: 'text-blue-400',
+      shadowColor: 'shadow-neon-indigo',
       link: '/partner/food',
     },
     {
@@ -80,6 +81,7 @@ const PartnerDashboard = () => {
       icon: ShoppingBag,
       color: 'from-amber-500 to-orange-600',
       textColor: 'text-amber-400',
+      shadowColor: 'shadow-neon-amber',
       link: '/partner/orders',
     },
     {
@@ -88,6 +90,7 @@ const PartnerDashboard = () => {
       icon: Clock,
       color: 'from-rose-600 to-pink-600',
       textColor: 'text-rose-400',
+      shadowColor: 'shadow-neon-rose',
       link: '/partner/orders?status=pending',
     },
     {
@@ -96,6 +99,7 @@ const PartnerDashboard = () => {
       icon: CheckCircle2,
       color: 'from-emerald-600 to-teal-600',
       textColor: 'text-emerald-400',
+      shadowColor: 'shadow-neon-emerald',
       link: '/partner/orders?status=delivered',
     },
     {
@@ -105,30 +109,33 @@ const PartnerDashboard = () => {
       icon: Star,
       color: 'from-yellow-500 to-amber-600',
       textColor: 'text-yellow-400',
+      shadowColor: 'shadow-neon-amber',
       link: '/partner/profile',
     },
   ];
 
   return (
     <div className="space-y-8">
-      {/* Welcome Banner */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 border border-slate-800 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-        <div>
-          <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">
-            Restaurant Partner Hub
+      {/* Welcome Hero Banner */}
+      <div className="p-6 sm:p-8 rounded-3xl glass-card border border-white/15 shadow-glass-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+        <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative">
+          <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest block">
+            Executive Partner Hub
           </span>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-1">
             Welcome, {partner?.restaurantName || 'Food Partner'}!
           </h1>
-          <p className="text-xs text-slate-400 mt-1 max-w-xl">
-            Manage your food reels, track live customer orders, update menus, and monitor your restaurant performance.
+          <p className="text-xs text-slate-400 mt-1 max-w-xl leading-relaxed">
+            Manage your food reels, track live kitchen orders, configure menu pricing, and monitor real-time restaurant performance.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-3 shrink-0 relative">
           <Link
             to="/partner/add-food"
-            className="px-5 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-transform active:scale-95"
+            className="px-5 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:opacity-95 text-slate-950 text-xs font-black flex items-center gap-2 shadow-neon-amber transition-transform active:scale-95"
           >
             <PlusCircle size={16} />
             <span>Upload New Food Reel</span>
@@ -136,7 +143,7 @@ const PartnerDashboard = () => {
         </div>
       </div>
 
-      {/* Metrics Cards Grid */}
+      {/* Metrics KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         {statCards.map((stat, idx) => {
           const Icon = stat.icon;
@@ -144,11 +151,11 @@ const PartnerDashboard = () => {
             <Link
               key={idx}
               to={stat.link}
-              className="p-5 rounded-3xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-all hover:-translate-y-1 shadow-lg flex flex-col justify-between"
+              className="p-5 rounded-3xl glass-card glass-card-hover border border-white/10 shadow-glass flex flex-col justify-between"
             >
               <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-semibold text-slate-400">{stat.title}</span>
-                <div className={`p-2 rounded-xl bg-slate-800 ${stat.textColor}`}>
+                <span className="text-xs font-bold text-slate-400">{stat.title}</span>
+                <div className={`p-2.5 rounded-2xl glass-dock ${stat.textColor} ${stat.shadowColor}`}>
                   <Icon size={16} />
                 </div>
               </div>
@@ -166,21 +173,21 @@ const PartnerDashboard = () => {
       </div>
 
       {/* Recent Orders Section */}
-      <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-amber-500/20 text-amber-400">
+      <div className="p-6 sm:p-8 rounded-3xl glass-card border border-white/15 shadow-glass-lg space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-white/10">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 shadow-neon-amber">
               <ReceiptText size={20} />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">Recent Orders</h2>
-              <p className="text-xs text-slate-400">Latest orders placed at your kitchen</p>
+              <h2 className="text-base font-black text-white tracking-tight">Recent Kitchen Orders</h2>
+              <p className="text-[11px] text-slate-400">Latest meals placed by hungry customers</p>
             </div>
           </div>
 
           <Link
             to="/partner/orders"
-            className="text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1"
+            className="text-xs font-black text-amber-400 hover:underline flex items-center gap-1"
           >
             <span>View All</span>
             <ArrowRight size={14} />
@@ -188,52 +195,52 @@ const PartnerDashboard = () => {
         </div>
 
         {recentOrders.length === 0 ? (
-          <div className="py-12 text-center text-slate-500 text-xs">
-            No incoming orders yet. Your food reels are active in the feed!
+          <div className="py-12 text-center text-slate-500 text-xs italic">
+            No incoming orders yet. Your food reels are active in customer feeds!
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="border-b border-slate-800 text-slate-400 uppercase tracking-wider text-[10px]">
+              <thead className="border-b border-white/10 text-slate-400 uppercase tracking-wider text-[10px]">
                 <tr>
-                  <th className="py-3 px-3">Order ID</th>
-                  <th className="py-3 px-3">Customer</th>
-                  <th className="py-3 px-3">Items</th>
-                  <th className="py-3 px-3">Total</th>
-                  <th className="py-3 px-3">Status</th>
-                  <th className="py-3 px-3">Placed</th>
-                  <th className="py-3 px-3 text-right">Action</th>
+                  <th className="py-3.5 px-3">Order ID</th>
+                  <th className="py-3.5 px-3">Customer</th>
+                  <th className="py-3.5 px-3">Dishes</th>
+                  <th className="py-3.5 px-3">Total</th>
+                  <th className="py-3.5 px-3">Status</th>
+                  <th className="py-3.5 px-3">Placed Time</th>
+                  <th className="py-3.5 px-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
+              <tbody className="divide-y divide-white/5">
                 {recentOrders.map((order) => {
                   const badge = getOrderStatusBadge(order.orderStatus);
                   return (
-                    <tr key={order._id} className="hover:bg-slate-800/40">
-                      <td className="py-3 px-3 font-mono font-bold text-white">
+                    <tr key={order._id} className="hover:bg-white/5 transition-colors">
+                      <td className="py-3.5 px-3 font-mono font-black text-white">
                         #{order.orderNumber}
                       </td>
-                      <td className="py-3 px-3 text-slate-300">
+                      <td className="py-3.5 px-3 text-slate-300 font-medium">
                         {order.deliveryAddress?.name || 'Customer'}
                       </td>
-                      <td className="py-3 px-3 text-slate-300">
+                      <td className="py-3.5 px-3 text-slate-300">
                         {order.items.length} {order.items.length === 1 ? 'dish' : 'dishes'}
                       </td>
-                      <td className="py-3 px-3 font-black text-emerald-400">
+                      <td className="py-3.5 px-3 font-black text-neon-emerald">
                         {formatCurrency(order.totalAmount)}
                       </td>
-                      <td className="py-3 px-3">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${badge.bg}`}>
+                      <td className="py-3.5 px-3">
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-black ${badge.bg}`}>
                           {badge.label}
                         </span>
                       </td>
-                      <td className="py-3 px-3 text-slate-400">
+                      <td className="py-3.5 px-3 text-slate-400">
                         {formatDate(order.createdAt)}
                       </td>
-                      <td className="py-3 px-3 text-right">
+                      <td className="py-3.5 px-3 text-right">
                         <Link
                           to="/partner/orders"
-                          className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold"
+                          className="px-3 py-1.5 rounded-xl glass-action-btn text-slate-200 font-bold hover:border-white/30"
                         >
                           Manage
                         </Link>

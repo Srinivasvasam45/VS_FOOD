@@ -5,43 +5,31 @@ import {
   CheckCircle2,
   ChefHat,
   Truck,
-  XCircle,
+  AlertCircle,
+  RefreshCw,
   MapPin,
   Phone,
-  RefreshCw,
-  AlertCircle,
+  Sparkles,
 } from 'lucide-react';
 import { orderService } from '../../services/orderService';
 import { formatCurrency, formatDate, getOrderStatusBadge } from '../../utils/formatters';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
-const statuses = [
-  { id: 'all', label: 'All Orders' },
-  { id: 'pending', label: 'Pending' },
-  { id: 'accepted', label: 'Accepted' },
-  { id: 'preparing', label: 'Preparing' },
-  { id: 'outForDelivery', label: 'Out for Delivery' },
-  { id: 'delivered', label: 'Delivered' },
-  { id: 'cancelled', label: 'Cancelled' },
-];
-
 const PartnerOrders = () => {
   const [orders, setOrders] = useState([]);
-  const [selectedStatus, setSelectedStatus] = useState('all');
   const [loading, setLoading] = useState(true);
+  const [filterStatus, setFilterStatus] = useState('all');
   const [updatingId, setUpdatingId] = useState(null);
 
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const res = await orderService.getPartnerOrders(
-        selectedStatus === 'all' ? '' : selectedStatus
-      );
+      const res = await orderService.getPartnerOrders();
       if (res.success && res.data) {
         setOrders(res.data);
       }
     } catch (err) {
-      console.error('Failed to fetch restaurant orders:', err);
+      console.error('Failed to load partner orders:', err);
     } finally {
       setLoading(false);
     }
@@ -49,60 +37,75 @@ const PartnerOrders = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, [selectedStatus]);
+  }, []);
 
-  const handleStatusUpdate = async (orderId, newStatus) => {
+  const handleStatusChange = async (orderId, newStatus) => {
     try {
       setUpdatingId(orderId);
       const res = await orderService.updateOrderStatus(orderId, newStatus);
-      if (res.success && res.data) {
+      if (res.success) {
         setOrders((prev) =>
-          prev.map((o) => (o._id === orderId ? res.data : o))
+          prev.map((o) =>
+            o._id === orderId ? { ...o, orderStatus: newStatus } : o
+          )
         );
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to update order status');
+      alert(err.response?.data?.message || 'Failed to update order status.');
     } finally {
       setUpdatingId(null);
     }
   };
+
+  const filteredOrders =
+    filterStatus === 'all'
+      ? orders
+      : orders.filter((o) => o.orderStatus === filterStatus);
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-white tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
             <ReceiptText size={24} className="text-amber-400" />
-            <span>Manage Kitchen Orders</span>
+            <span>Kitchen Order Fulfillment</span>
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Accept incoming orders, update kitchen preparation stages, and dispatch meals
+            Accept incoming orders and transition dishes through kitchen prep to dispatch
           </p>
         </div>
 
         <button
           onClick={fetchOrders}
-          className="p-2.5 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-colors self-start sm:self-auto"
+          className="p-3 rounded-2xl glass-action-btn text-slate-300 hover:text-white transition-all shadow-glass self-start sm:self-auto"
           title="Refresh orders"
         >
           <RefreshCw size={16} />
         </button>
       </div>
 
-      {/* Status Filter Tabs */}
+      {/* Filter Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-        {statuses.map((st) => (
+        {[
+          { id: 'all', label: 'All Orders' },
+          { id: 'pending', label: '⏳ Pending' },
+          { id: 'accepted', label: '✅ Accepted' },
+          { id: 'preparing', label: '👨‍🍳 Preparing' },
+          { id: 'outForDelivery', label: '🛵 On the Way' },
+          { id: 'delivered', label: '🎉 Delivered' },
+          { id: 'cancelled', label: '❌ Cancelled' },
+        ].map((tab) => (
           <button
-            key={st.id}
-            onClick={() => setSelectedStatus(st.id)}
-            className={`px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all ${
-              selectedStatus === st.id
-                ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20'
-                : 'bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-700 hover:text-white'
+            key={tab.id}
+            onClick={() => setFilterStatus(tab.id)}
+            className={`px-4 py-2 rounded-2xl text-xs font-black whitespace-nowrap transition-all ${
+              filterStatus === tab.id
+                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-neon-amber font-black scale-105'
+                : 'glass-pill text-slate-300 hover:border-white/20'
             }`}
           >
-            {st.label}
+            {tab.label}
           </button>
         ))}
       </div>
@@ -110,33 +113,30 @@ const PartnerOrders = () => {
       {/* Orders List */}
       {loading ? (
         <div className="py-24 flex justify-center">
-          <LoadingSpinner size="lg" message="Loading restaurant orders..." />
+          <LoadingSpinner size="lg" message="Loading kitchen orders..." />
         </div>
-      ) : orders.length === 0 ? (
-        <div className="p-12 rounded-3xl bg-slate-900 border border-slate-800 text-center space-y-3 max-w-md mx-auto my-12">
-          <ReceiptText size={40} className="mx-auto text-slate-600" />
-          <h3 className="text-lg font-bold text-white">No Orders Found</h3>
+      ) : filteredOrders.length === 0 ? (
+        <div className="p-12 rounded-3xl glass-card border border-white/10 text-center space-y-3 max-w-md mx-auto my-12 shadow-glass">
+          <ReceiptText size={36} className="mx-auto text-slate-600" />
+          <h3 className="text-base font-black text-white">No Orders Found</h3>
           <p className="text-xs text-slate-400">
-            {selectedStatus === 'all'
-              ? 'No incoming orders yet.'
-              : `No orders currently in '${selectedStatus}' state.`}
+            No orders match the current status filter.
           </p>
         </div>
       ) : (
         <div className="space-y-4">
-          {orders.map((order) => {
+          {filteredOrders.map((order) => {
             const badge = getOrderStatusBadge(order.orderStatus);
-            const isUpdating = updatingId === order._id;
 
             return (
               <div
                 key={order._id}
-                className="p-5 sm:p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-4"
+                className="p-6 rounded-3xl glass-card border border-white/10 shadow-glass space-y-5"
               >
-                {/* Top Info Bar */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+                {/* Order Top Bar */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/10">
                   <div className="flex items-center gap-3">
-                    <span className="font-mono text-sm font-bold text-white">
+                    <span className="font-mono text-sm font-black text-amber-400">
                       #{order.orderNumber}
                     </span>
                     <span className="text-xs text-slate-400">
@@ -144,135 +144,124 @@ const PartnerOrders = () => {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${badge.bg}`}>
-                      {badge.label}
-                    </span>
-                    <span className="text-sm font-black text-emerald-400">
-                      {formatCurrency(order.totalAmount)}
-                    </span>
-                  </div>
+                  <span className={`px-3 py-1 rounded-full text-xs font-black self-start sm:self-auto ${badge.bg}`}>
+                    {badge.label}
+                  </span>
                 </div>
 
-                {/* Items & Customer Breakdown */}
+                {/* Customer Info & Ordered Items */}
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                  {/* Items list */}
-                  <div className="md:col-span-7 space-y-2">
-                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">
-                      Order Items
+                  {/* Left: Customer Delivery Details */}
+                  <div className="md:col-span-4 space-y-2 text-xs">
+                    <span className="font-black text-slate-300 uppercase tracking-wider block text-[10px]">
+                      Customer Details
                     </span>
-                    <div className="space-y-1.5 divide-y divide-slate-800/60">
-                      {order.items.map((item, idx) => (
+                    <p className="font-bold text-white text-sm">
+                      {order.deliveryAddress?.name}
+                    </p>
+                    <p className="text-slate-300 flex items-center gap-1.5">
+                      <Phone size={13} className="text-neon-emerald" />
+                      <span>{order.deliveryAddress?.phone}</span>
+                    </p>
+                    <p className="text-slate-400 flex items-start gap-1.5 mt-1">
+                      <MapPin size={13} className="text-neon-rose shrink-0 mt-0.5" />
+                      <span>
+                        {order.deliveryAddress?.address}, {order.deliveryAddress?.city} - {order.deliveryAddress?.pincode}
+                      </span>
+                    </p>
+                  </div>
+
+                  {/* Center: Dishes List */}
+                  <div className="md:col-span-5 space-y-2">
+                    <span className="font-black text-slate-300 uppercase tracking-wider block text-[10px]">
+                      Items ({order.items.length})
+                    </span>
+                    <div className="space-y-1.5">
+                      {order.items.map((it, idx) => (
                         <div
                           key={idx}
-                          className="pt-1.5 first:pt-0 flex items-center justify-between text-xs"
+                          className="flex items-center justify-between text-xs p-2 rounded-xl glass-dock border border-white/5"
                         >
-                          <span className="text-white font-medium">
-                            <span className="text-amber-400 font-bold mr-1.5">
-                              {item.quantity}x
-                            </span>
-                            {item.name}
+                          <span className="text-slate-200 font-semibold truncate">
+                            {it.quantity}x {it.name}
                           </span>
-                          <span className="text-slate-300 font-semibold">
-                            {formatCurrency(item.subtotal)}
+                          <span className="font-bold text-white shrink-0 ml-2">
+                            {formatCurrency(it.subtotal)}
                           </span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Customer details */}
-                  <div className="md:col-span-5 p-4 rounded-2xl bg-slate-800/40 border border-slate-800 space-y-2 text-xs">
-                    <span className="font-bold text-slate-300 block">
-                      Customer & Delivery Address
-                    </span>
-                    <p className="text-slate-200 font-semibold">
-                      {order.deliveryAddress?.name}
-                    </p>
-                    <p className="text-slate-400 flex items-center gap-1.5">
-                      <Phone size={12} className="text-amber-400" />
-                      <span>{order.deliveryAddress?.phone}</span>
-                    </p>
-                    <p className="text-slate-400 flex items-start gap-1.5">
-                      <MapPin size={12} className="text-brand-500 shrink-0 mt-0.5" />
-                      <span>
-                        {order.deliveryAddress?.address}, {order.deliveryAddress?.city} -{' '}
-                        {order.deliveryAddress?.pincode}
+                  {/* Right: Bill & Action Pipeline */}
+                  <div className="md:col-span-3 flex flex-col justify-between space-y-3">
+                    <div>
+                      <span className="font-black text-slate-400 uppercase tracking-wider block text-[10px]">
+                        Grand Total
                       </span>
-                    </p>
-                    <div className="pt-2 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between">
-                      <span>Payment: {order.paymentMethod}</span>
-                      <span className="capitalize font-bold text-amber-300">
-                        Status: {order.paymentStatus}
+                      <span className="text-xl font-black text-neon-emerald">
+                        {formatCurrency(order.totalAmount)}
                       </span>
+                      <p className="text-[10px] text-slate-400 mt-0.5">
+                        {order.paymentMethod}
+                      </p>
                     </div>
-                  </div>
-                </div>
 
-                {/* Status Action Buttons (Pipeline transitions) */}
-                <div className="pt-3 border-t border-slate-800 flex items-center justify-between flex-wrap gap-2">
-                  <div className="text-xs text-slate-500">
-                    Order state pipeline transition
-                  </div>
-
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {order.orderStatus === 'pending' && (
-                      <>
+                    {/* Action Step Transitions */}
+                    <div className="space-y-1.5">
+                      {order.orderStatus === 'pending' && (
                         <button
-                          onClick={() => handleStatusUpdate(order._id, 'accepted')}
-                          disabled={isUpdating}
-                          className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all"
+                          onClick={() => handleStatusChange(order._id, 'accepted')}
+                          disabled={updatingId === order._id}
+                          className="w-full py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black transition-colors"
                         >
                           Accept Order
                         </button>
+                      )}
+
+                      {order.orderStatus === 'accepted' && (
                         <button
-                          onClick={() => handleStatusUpdate(order._id, 'cancelled')}
-                          disabled={isUpdating}
-                          className="px-3 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 text-xs font-bold transition-all"
+                          onClick={() => handleStatusChange(order._id, 'preparing')}
+                          disabled={updatingId === order._id}
+                          className="w-full py-2.5 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black transition-colors flex items-center justify-center gap-1.5"
                         >
-                          Reject
+                          <ChefHat size={14} />
+                          <span>Start Kitchen Prep</span>
                         </button>
-                      </>
-                    )}
+                      )}
 
-                    {order.orderStatus === 'accepted' && (
-                      <button
-                        onClick={() => handleStatusUpdate(order._id, 'preparing')}
-                        disabled={isUpdating}
-                        className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold flex items-center gap-1.5 transition-all"
-                      >
-                        <ChefHat size={14} />
-                        <span>Start Preparing</span>
-                      </button>
-                    )}
+                      {order.orderStatus === 'preparing' && (
+                        <button
+                          onClick={() => handleStatusChange(order._id, 'outForDelivery')}
+                          disabled={updatingId === order._id}
+                          className="w-full py-2.5 px-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-black transition-colors flex items-center justify-center gap-1.5"
+                        >
+                          <Truck size={14} />
+                          <span>Dispatch for Delivery</span>
+                        </button>
+                      )}
 
-                    {order.orderStatus === 'preparing' && (
-                      <button
-                        onClick={() => handleStatusUpdate(order._id, 'outForDelivery')}
-                        disabled={isUpdating}
-                        className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold flex items-center gap-1.5 transition-all"
-                      >
-                        <Truck size={14} />
-                        <span>Send Out for Delivery</span>
-                      </button>
-                    )}
+                      {order.orderStatus === 'outForDelivery' && (
+                        <button
+                          onClick={() => handleStatusChange(order._id, 'delivered')}
+                          disabled={updatingId === order._id}
+                          className="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black transition-colors flex items-center justify-center gap-1.5"
+                        >
+                          <CheckCircle2 size={14} />
+                          <span>Mark as Delivered</span>
+                        </button>
+                      )}
 
-                    {order.orderStatus === 'outForDelivery' && (
-                      <button
-                        onClick={() => handleStatusUpdate(order._id, 'delivered')}
-                        disabled={isUpdating}
-                        className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 transition-all"
-                      >
-                        <CheckCircle2 size={14} />
-                        <span>Mark Delivered</span>
-                      </button>
-                    )}
-
-                    {['delivered', 'cancelled'].includes(order.orderStatus) && (
-                      <span className="text-xs text-slate-500 font-semibold italic">
-                        Order Completed
-                      </span>
-                    )}
+                      {!['delivered', 'cancelled'].includes(order.orderStatus) && (
+                        <button
+                          onClick={() => handleStatusChange(order._id, 'cancelled')}
+                          disabled={updatingId === order._id}
+                          className="w-full py-1.5 px-3 rounded-xl text-rose-400 hover:bg-rose-500/10 text-[11px] font-bold transition-colors"
+                        >
+                          Cancel Order
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

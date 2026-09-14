@@ -1,26 +1,32 @@
 import React from 'react';
 
-const LoadingSpinner = ({ size = 'md', message = 'Loading...', fullScreen = false }) => {
+const LoadingSpinner = ({ size = 'md', message = 'Loading delicious reels...', fullScreen = false }) => {
   const sizeClasses = {
-    sm: 'w-5 h-5 border-2',
-    md: 'w-8 h-8 border-3',
-    lg: 'w-12 h-12 border-4',
-    xl: 'w-16 h-16 border-4',
+    sm: 'w-6 h-6 border-2',
+    md: 'w-10 h-10 border-3',
+    lg: 'w-14 h-14 border-4',
+    xl: 'w-18 h-18 border-4',
   };
 
   const content = (
-    <div className="flex flex-col items-center justify-center gap-3 p-6 text-center">
-      <div
-        className={`${sizeClasses[size]} border-brand-500 border-t-transparent rounded-full animate-spin`}
-      />
-      {message && <p className="text-sm text-slate-400 animate-pulse">{message}</p>}
+    <div className="flex flex-col items-center justify-center gap-4 p-6 text-center">
+      <div className="relative flex items-center justify-center">
+        {/* Ambient Ring Glow */}
+        <div className="absolute inset-0 rounded-full bg-neon-rose/30 blur-xl animate-pulse" />
+        <div
+          className={`${sizeClasses[size]} border-white/10 border-t-neon-rose border-r-neon-amber rounded-full animate-spin shadow-neon-rose`}
+        />
+      </div>
+      {message && <p className="text-xs font-bold text-slate-300 animate-pulse tracking-wide">{message}</p>}
     </div>
   );
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center">
-        {content}
+      <div className="fixed inset-0 bg-cosmic-950/85 backdrop-blur-xl z-50 flex items-center justify-center animate-fade-in">
+        <div className="p-8 rounded-3xl glass-dock border border-white/15 shadow-glass-lg">
+          {content}
+        </div>
       </div>
     );
   }

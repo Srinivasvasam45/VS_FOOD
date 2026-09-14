@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Sparkles, Utensils, Search, SlidersHorizontal, MapPin } from 'lucide-react';
+import { Sparkles, Utensils, Search, SlidersHorizontal, MapPin, Flame } from 'lucide-react';
 import { foodService } from '../services/foodService';
 import { useLocation } from '../context/LocationContext';
 import ReelFeed from '../components/ReelFeed';
@@ -51,15 +51,15 @@ const Home = () => {
 
   return (
     <div className="w-full flex flex-col items-center">
-      {/* Top Filter Bar (Sticky below navbar) */}
-      <div className="w-full max-w-xl px-4 py-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar z-20">
-        {/* Diet toggle */}
-        <div className="flex items-center rounded-2xl bg-slate-900/90 border border-slate-800 p-1 shrink-0">
+      {/* Top Filter Bar */}
+      <div className="w-full max-w-2xl px-4 py-3 flex items-center gap-2.5 overflow-x-auto no-scrollbar z-20">
+        {/* Diet toggle pill */}
+        <div className="flex items-center rounded-2xl glass-dock p-1 shrink-0 border border-white/10 shadow-glass">
           <button
             onClick={() => setSelectedFoodType('all')}
-            className={`px-3 py-1 rounded-xl text-xs font-bold transition-colors ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all ${
               selectedFoodType === 'all'
-                ? 'bg-slate-700 text-white'
+                ? 'bg-white/15 text-white shadow-sm'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -67,38 +67,40 @@ const Home = () => {
           </button>
           <button
             onClick={() => setSelectedFoodType('veg')}
-            className={`px-3 py-1 rounded-xl text-xs font-bold transition-colors ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1 transition-all ${
               selectedFoodType === 'veg'
-                ? 'bg-emerald-600 text-white'
+                ? 'bg-emerald-500/20 text-neon-emerald border border-emerald-500/30 shadow-neon-emerald'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            🌱 Veg
+            <span className="w-1.5 h-1.5 rounded-full bg-neon-emerald" />
+            <span>Veg</span>
           </button>
           <button
             onClick={() => setSelectedFoodType('nonVeg')}
-            className={`px-3 py-1 rounded-xl text-xs font-bold transition-colors ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1 transition-all ${
               selectedFoodType === 'nonVeg'
-                ? 'bg-rose-600 text-white'
+                ? 'bg-rose-500/20 text-neon-rose border border-rose-500/30 shadow-neon-rose'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            🍗 Non-Veg
+            <span className="w-1.5 h-1.5 rounded-full bg-neon-rose" />
+            <span>Non-Veg</span>
           </button>
         </div>
 
-        <div className="w-px h-6 bg-slate-800 shrink-0" />
+        <div className="w-px h-6 bg-white/10 shrink-0" />
 
         {/* Category Pills */}
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-3.5 py-1.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all ${
+              className={`px-4 py-2 rounded-2xl text-xs font-black whitespace-nowrap transition-all ${
                 selectedCategory === category
-                  ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'bg-slate-900/80 text-slate-300 border border-slate-800 hover:border-slate-700 hover:text-white'
+                  ? 'bg-gradient-to-r from-brand-600 via-rose-500 to-neon-rose text-white shadow-neon-rose scale-105 border border-white/20'
+                  : 'glass-pill text-slate-300 hover:border-white/25 hover:text-white hover:scale-105'
               }`}
             >
               {category}

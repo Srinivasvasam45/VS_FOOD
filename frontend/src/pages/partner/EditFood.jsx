@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Sparkles, ArrowLeft, AlertCircle, Save } from 'lucide-react';
+import {
+  Sparkles,
+  ArrowLeft,
+  Check,
+  AlertCircle,
+  Video,
+  Save,
+} from 'lucide-react';
 import { foodService } from '../../services/foodService';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
@@ -42,20 +49,20 @@ const EditFood = () => {
         setLoading(true);
         const res = await foodService.getFoodById(id);
         if (res.success && res.data) {
-          const food = res.data;
+          const item = res.data;
           setFormData({
-            name: food.name || '',
-            description: food.description || '',
-            price: food.price || '',
-            category: food.category || 'Biryani',
-            foodType: food.foodType || 'veg',
-            videoUrl: food.videoUrl || '',
-            thumbnailUrl: food.thumbnailUrl || food.imageUrl || '',
-            isAvailable: food.isAvailable !== undefined ? food.isAvailable : true,
+            name: item.name || '',
+            description: item.description || '',
+            price: item.price || '',
+            category: item.category || 'Biryani',
+            foodType: item.foodType || 'veg',
+            videoUrl: item.videoUrl || '',
+            thumbnailUrl: item.thumbnailUrl || item.imageUrl || '',
+            isAvailable: item.isAvailable !== undefined ? item.isAvailable : true,
           });
         }
       } catch (err) {
-        setError(err.response?.data?.message || 'Failed to fetch food details');
+        setError('Failed to load food item.');
       } finally {
         setLoading(false);
       }
@@ -78,16 +85,14 @@ const EditFood = () => {
       setSaving(true);
       setError('');
 
-      const res = await foodService.updateFood(id, {
+      await foodService.updateFood(id, {
         ...formData,
         price: Number(formData.price),
       });
 
-      if (res.success) {
-        navigate('/partner/food');
-      }
+      navigate('/partner/food');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update food reel');
+      setError(err.response?.data?.message || 'Failed to update food reel.');
     } finally {
       setSaving(false);
     }
@@ -96,7 +101,7 @@ const EditFood = () => {
   if (loading) {
     return (
       <div className="py-24 flex justify-center">
-        <LoadingSpinner size="lg" message="Loading food dish..." />
+        <LoadingSpinner size="lg" message="Loading dish parameters..." />
       </div>
     );
   }
@@ -105,25 +110,25 @@ const EditFood = () => {
     <div className="max-w-4xl mx-auto space-y-6">
       <Link
         to="/partner/food"
-        className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors"
+        className="inline-flex items-center gap-2 text-xs font-black text-slate-400 hover:text-white transition-colors glass-pill px-4 py-2 rounded-2xl border border-white/10"
       >
         <ArrowLeft size={16} />
         <span>Back to Food Portfolio</span>
       </Link>
 
-      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl space-y-6">
-        <div>
+      <div className="p-6 sm:p-8 rounded-3xl glass-card border border-white/15 shadow-glass-lg space-y-6 relative overflow-hidden">
+        <div className="relative">
           <h1 className="text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
             <Sparkles size={24} className="text-amber-400" />
-            <span>Edit Food Item / Reel</span>
+            <span>Edit Food Reel</span>
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Update pricing, description, availability, and video reel media
+            Update pricing, descriptions, dietary classification, or video link
           </p>
         </div>
 
         {error && (
-          <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-400 flex items-center gap-2">
+          <div className="p-3.5 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-xs text-rose-400 flex items-center gap-2">
             <AlertCircle size={16} />
             <span>{error}</span>
           </div>
@@ -132,7 +137,7 @@ const EditFood = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-bold text-slate-300 mb-1.5">
                 Food Dish Name *
               </label>
               <input
@@ -141,12 +146,12 @@ const EditFood = () => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-2xl bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:border-amber-500"
+                className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white focus:outline-none focus:border-amber-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-bold text-slate-300 mb-1.5">
                 Price in ₹ (INR) *
               </label>
               <input
@@ -157,24 +162,24 @@ const EditFood = () => {
                 value={formData.price}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-2xl bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:border-amber-500"
+                className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white focus:outline-none focus:border-amber-500"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Category *
+              <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                Food Category
               </label>
               <select
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-2xl bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:border-amber-500"
+                className="w-full px-4 py-3 rounded-2xl glass-dock border border-white/10 text-xs text-white focus:outline-none focus:border-amber-500"
               >
                 {categories.map((c) => (
-                  <option key={c} value={c}>
+                  <option key={c} value={c} className="bg-cosmic-950 text-white">
                     {c}
                   </option>
                 ))}
@@ -182,8 +187,8 @@ const EditFood = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Dietary Food Type *
+              <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                Dietary Type
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {[
@@ -195,10 +200,10 @@ const EditFood = () => {
                     key={type.id}
                     type="button"
                     onClick={() => setFormData({ ...formData, foodType: type.id })}
-                    className={`py-2.5 rounded-xl text-xs font-bold border transition-all ${
+                    className={`py-3 rounded-2xl text-xs font-black border transition-all ${
                       formData.foodType === type.id
-                        ? 'bg-amber-500 text-slate-950 border-amber-500 font-black'
-                        : 'bg-slate-800 text-slate-400 border-slate-700'
+                        ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 border-amber-500 shadow-neon-amber'
+                        : 'glass-dock text-slate-400 border-white/10'
                     }`}
                   >
                     {type.label}
@@ -209,22 +214,22 @@ const EditFood = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              Description
+            <label className="block text-xs font-bold text-slate-300 mb-1.5">
+              Description / Recipe Notes
             </label>
             <textarea
               name="description"
               rows={3}
               value={formData.description}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-2xl bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:border-amber-500 resize-none"
+              className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white focus:outline-none focus:border-amber-500 resize-none"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Food Reel Video URL *
+              <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                Video Reel URL
               </label>
               <input
                 type="url"
@@ -232,12 +237,12 @@ const EditFood = () => {
                 value={formData.videoUrl}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-2xl bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:border-amber-500"
+                className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white focus:outline-none focus:border-amber-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-bold text-slate-300 mb-1.5">
                 Thumbnail Image URL
               </label>
               <input
@@ -245,7 +250,7 @@ const EditFood = () => {
                 name="thumbnailUrl"
                 value={formData.thumbnailUrl}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-2xl bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none focus:border-amber-500"
+                className="w-full px-4 py-3 rounded-2xl glass-input text-xs text-white focus:outline-none focus:border-amber-500"
               />
             </div>
           </div>
@@ -253,21 +258,21 @@ const EditFood = () => {
           <div className="flex items-center gap-3">
             <input
               type="checkbox"
-              id="editIsAvailable"
+              id="isAvailable"
               name="isAvailable"
               checked={formData.isAvailable}
               onChange={handleChange}
               className="w-4 h-4 rounded accent-amber-500"
             />
-            <label htmlFor="editIsAvailable" className="text-xs font-semibold text-slate-300">
-              Mark this dish available for order placement
+            <label htmlFor="isAvailable" className="text-xs font-bold text-slate-300">
+              Dish is currently available for ordering
             </label>
           </div>
 
           <button
             type="submit"
             disabled={saving}
-            className="w-full py-4 rounded-2xl bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 text-xs font-black flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 transition-all active:scale-[0.98]"
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:opacity-95 text-slate-950 text-xs font-black flex items-center justify-center gap-2 shadow-neon-amber transition-all active:scale-95"
           >
             {saving ? (
               <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />

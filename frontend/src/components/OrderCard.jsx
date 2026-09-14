@@ -25,24 +25,26 @@ const OrderCard = ({ order }) => {
   const isCancelled = order.orderStatus === 'cancelled';
 
   return (
-    <div className="rounded-3xl bg-slate-900/80 border border-slate-800/80 p-5 sm:p-6 shadow-xl space-y-5">
+    <div className="rounded-3xl glass-card border border-white/15 p-5 sm:p-7 shadow-glass-lg space-y-6 relative overflow-hidden">
       {/* Header Info */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
-        <div className="flex items-center gap-3">
-          <img
-            src={
-              partner.profileImage ||
-              'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=150&q=80'
-            }
-            alt={partner.restaurantName}
-            className="w-12 h-12 rounded-2xl object-cover border border-slate-700 shrink-0"
-          />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+        <div className="flex items-center gap-3.5">
+          <div className="p-0.5 rounded-2xl bg-gradient-to-tr from-brand-500 via-neon-rose to-amber-500">
+            <img
+              src={
+                partner.profileImage ||
+                'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=150&q=80'
+              }
+              alt={partner.restaurantName}
+              className="w-12 h-12 rounded-2xl object-cover border-2 border-cosmic-950"
+            />
+          </div>
           <div>
-            <h3 className="text-base font-bold text-white">
-              {partner.restaurantName || 'Restaurant'}
+            <h3 className="text-base font-black text-white">
+              {partner.restaurantName || 'Restaurant Kitchen'}
             </h3>
-            <p className="text-xs text-slate-400 flex items-center gap-2">
-              <span className="font-mono text-slate-300">#{order.orderNumber}</span>
+            <p className="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
+              <span className="font-mono text-neon-rose font-bold">#{order.orderNumber}</span>
               <span>•</span>
               <span>{formatDate(order.createdAt)}</span>
             </p>
@@ -52,22 +54,24 @@ const OrderCard = ({ order }) => {
         {/* Status Pill */}
         <div className="self-start sm:self-auto">
           <span
-            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${statusInfo.bg}`}
+            className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black shadow-sm ${statusInfo.bg}`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
+            <span className="w-2 h-2 rounded-full bg-current animate-ping" />
             {statusInfo.label}
           </span>
         </div>
       </div>
 
-      {/* Live Status Progression Stepper (If not cancelled) */}
+      {/* Cyberpunk Live Status Progression Stepper */}
       {!isCancelled ? (
-        <div className="py-2">
+        <div className="py-3 px-2">
           <div className="grid grid-cols-5 gap-1 relative">
             {/* Background connection track */}
-            <div className="absolute top-4 left-6 right-6 h-0.5 bg-slate-800 -z-0" />
+            <div className="absolute top-4 left-6 right-6 h-1 bg-white/10 -z-0 rounded-full" />
+            
+            {/* Animated Glowing Progress Beam */}
             <div
-              className="absolute top-4 left-6 h-0.5 bg-brand-500 transition-all duration-500 -z-0"
+              className="absolute top-4 left-6 h-1 bg-gradient-to-r from-brand-500 via-neon-rose to-neon-emerald rounded-full transition-all duration-700 shadow-neon-rose -z-0"
               style={{
                 width: `${(Math.max(0, statusInfo.stepIndex) / 4) * 100}%`,
               }}
@@ -81,22 +85,22 @@ const OrderCard = ({ order }) => {
               return (
                 <div key={step.key} className="flex flex-col items-center text-center z-10">
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                    className={`w-9 h-9 rounded-2xl flex items-center justify-center transition-all ${
                       isCurrent
-                        ? 'bg-brand-600 text-white ring-4 ring-brand-500/20 shadow-lg shadow-brand-500/40 scale-110'
+                        ? 'bg-gradient-to-tr from-brand-600 to-neon-rose text-white shadow-neon-rose scale-115 border border-white/40 ring-4 ring-brand-500/20'
                         : isCompleted
-                        ? 'bg-emerald-600 text-white'
-                        : 'bg-slate-800 text-slate-500 border border-slate-700'
+                        ? 'bg-emerald-500 text-slate-950 shadow-neon-emerald border border-emerald-400'
+                        : 'glass-dock text-slate-500 border border-white/10'
                     }`}
                   >
-                    <Icon size={14} />
+                    <Icon size={15} />
                   </div>
                   <span
-                    className={`text-[10px] mt-1.5 font-semibold leading-tight ${
+                    className={`text-[10px] mt-2 font-black leading-tight ${
                       isCurrent
-                        ? 'text-brand-400 font-bold'
+                        ? 'text-neon-rose'
                         : isCompleted
-                        ? 'text-slate-300'
+                        ? 'text-slate-200'
                         : 'text-slate-500'
                     }`}
                   >
@@ -108,30 +112,30 @@ const OrderCard = ({ order }) => {
           </div>
         </div>
       ) : (
-        <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-400 flex items-center gap-2">
+        <div className="p-4 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-xs text-rose-400 flex items-center gap-2">
           <AlertCircle size={16} />
           <span>This order was cancelled.</span>
         </div>
       )}
 
       {/* Ordered Items List */}
-      <div className="space-y-2 py-1">
-        <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-          Items Ordered
+      <div className="space-y-2.5 py-1">
+        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+          Ordered Dishes
         </h4>
         <div className="space-y-2">
           {order.items.map((item, idx) => (
             <div
               key={idx}
-              className="flex items-center justify-between text-xs text-slate-200 py-1"
+              className="flex items-center justify-between text-xs text-slate-200 p-2.5 rounded-2xl glass-dock border border-white/5"
             >
-              <div className="flex items-center gap-2 truncate">
-                <span className="w-5 h-5 rounded-md bg-slate-800 flex items-center justify-center text-[10px] font-bold text-brand-400 shrink-0">
+              <div className="flex items-center gap-2.5 truncate">
+                <span className="w-5 h-5 rounded-lg bg-neon-rose/20 text-neon-rose flex items-center justify-center text-[10px] font-black shrink-0 border border-neon-rose/30">
                   {item.quantity}x
                 </span>
-                <span className="truncate">{item.name}</span>
+                <span className="truncate font-semibold">{item.name}</span>
               </div>
-              <span className="font-semibold text-white shrink-0 ml-2">
+              <span className="font-black text-white shrink-0 ml-2">
                 {formatCurrency(item.subtotal)}
               </span>
             </div>
@@ -140,28 +144,30 @@ const OrderCard = ({ order }) => {
       </div>
 
       {/* Delivery Address & Bill Summary */}
-      <div className="pt-3 border-t border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-400">
+      <div className="pt-4 border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-slate-400">
         <div>
-          <span className="font-semibold text-slate-300 block mb-1 flex items-center gap-1">
-            <MapPin size={12} className="text-brand-500" />
+          <span className="font-bold text-slate-300 block mb-1 flex items-center gap-1.5">
+            <MapPin size={13} className="text-neon-rose" />
             Delivery Address
           </span>
-          <p className="line-clamp-2">
+          <p className="line-clamp-2 text-slate-300">
             {order.deliveryAddress?.address}, {order.deliveryAddress?.city} - {order.deliveryAddress?.pincode}
           </p>
-          <p className="text-[11px] text-slate-500 mt-0.5">
+          <p className="text-[11px] text-slate-400 mt-0.5">
             Recipient: {order.deliveryAddress?.name} ({order.deliveryAddress?.phone})
           </p>
         </div>
 
-        <div className="sm:text-right space-y-1">
+        <div className="sm:text-right space-y-1.5">
           <div className="flex justify-between sm:justify-end gap-3">
             <span>Payment:</span>
-            <span className="text-slate-200 font-semibold">{order.paymentMethod}</span>
+            <span className="text-slate-200 font-bold">{order.paymentMethod}</span>
           </div>
           <div className="flex justify-between sm:justify-end gap-3 text-sm font-black text-white pt-1">
             <span>Total Paid:</span>
-            <span className="text-emerald-400">{formatCurrency(order.totalAmount)}</span>
+            <span className="text-neon-emerald text-lg drop-shadow-[0_0_10px_rgba(0,245,155,0.4)]">
+              {formatCurrency(order.totalAmount)}
+            </span>
           </div>
         </div>
       </div>

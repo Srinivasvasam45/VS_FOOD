@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Search, SlidersHorizontal, UtensilsCrossed, Store, Star, X } from 'lucide-react';
+import { Search, SlidersHorizontal, UtensilsCrossed, Store, Star, X, Sparkles, Flame } from 'lucide-react';
 import { foodService } from '../services/foodService';
 import { partnerService } from '../services/partnerService';
 import { useLocation } from '../context/LocationContext';
@@ -62,7 +62,7 @@ const Explore = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchData();
-    }, 250);
+    }, 200);
     return () => clearTimeout(timer);
   }, [fetchData]);
 
@@ -76,55 +76,58 @@ const Explore = () => {
   const hasActiveFilters = searchQuery || selectedCategory !== 'All' || selectedDiet !== 'all' || minRating;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-7">
       {/* Search Header */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 justify-between">
-        {/* Search Box */}
-        <div className="relative flex-1 max-w-xl">
-          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={
-              activeTab === 'foods'
-                ? 'Search dishes, biryani, pizzas, rolls...'
-                : 'Search restaurants, cuisines, cafes...'
-            }
-            className="w-full pl-11 pr-10 py-3.5 rounded-2xl bg-slate-900 border border-slate-700/80 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all shadow-md"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
-            >
-              <X size={16} />
-            </button>
-          )}
+        {/* Futuristic Search Box */}
+        <div className="relative flex-1 max-w-xl group">
+          <div className="absolute -inset-0.5 rounded-3xl bg-gradient-to-r from-neon-rose via-neon-indigo to-neon-cyan opacity-0 group-focus-within:opacity-75 blur-md transition duration-300" />
+          <div className="relative flex items-center">
+            <Search size={18} className="absolute left-4.5 text-slate-400 group-focus-within:text-neon-rose transition-colors" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={
+                activeTab === 'foods'
+                  ? 'Search dishes, crispy pizzas, biryanis, desserts...'
+                  : 'Search restaurants, cuisines, dining spots...'
+              }
+              className="w-full pl-12 pr-10 py-3.5 rounded-3xl glass-input text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none focus:border-neon-rose shadow-glass"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-4 text-slate-400 hover:text-white p-1 rounded-full hover:bg-white/10"
+              >
+                <X size={15} />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Tab switcher */}
-        <div className="flex items-center rounded-2xl bg-slate-900 border border-slate-800 p-1 self-start sm:self-auto">
+        <div className="flex items-center rounded-3xl glass-dock p-1.5 self-start sm:self-auto border border-white/10 shadow-glass">
           <button
             onClick={() => setActiveTab('foods')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-black transition-all ${
               activeTab === 'foods'
-                ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
+                ? 'bg-gradient-to-r from-brand-600 to-neon-rose text-white shadow-neon-rose scale-105'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            <UtensilsCrossed size={15} />
+            <UtensilsCrossed size={14} />
             <span>Dishes & Reels</span>
           </button>
           <button
             onClick={() => setActiveTab('restaurants')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-black transition-all ${
               activeTab === 'restaurants'
-                ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
+                ? 'bg-gradient-to-r from-brand-600 to-neon-rose text-white shadow-neon-rose scale-105'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            <Store size={15} />
+            <Store size={14} />
             <span>Restaurants</span>
           </button>
         </div>
@@ -132,17 +135,17 @@ const Explore = () => {
 
       {/* Filter Controls (When exploring foods) */}
       {activeTab === 'foods' && (
-        <div className="space-y-3 pt-1">
+        <div className="space-y-3.5 pt-1">
           {/* Category Filter Pills */}
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all ${
+                className={`px-4 py-2 rounded-2xl text-xs font-black whitespace-nowrap transition-all ${
                   selectedCategory === cat
-                    ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                    : 'bg-slate-900/80 text-slate-300 border border-slate-800 hover:border-slate-700'
+                    ? 'bg-gradient-to-r from-brand-600 via-rose-500 to-neon-rose text-white shadow-neon-rose scale-105 border border-white/20'
+                    : 'glass-pill text-slate-300 hover:border-white/25 hover:text-white hover:scale-105'
                 }`}
               >
                 {cat}
@@ -152,18 +155,18 @@ const Explore = () => {
 
           {/* Secondary Filters: Diet & Rating */}
           <div className="flex items-center gap-2 flex-wrap text-xs">
-            <span className="text-slate-400 font-semibold flex items-center gap-1">
-              <SlidersHorizontal size={13} />
+            <span className="text-slate-400 font-bold flex items-center gap-1.5 mr-1">
+              <SlidersHorizontal size={13} className="text-neon-rose" />
               Filters:
             </span>
 
             {/* Diet toggle */}
             <button
               onClick={() => setSelectedDiet(selectedDiet === 'veg' ? 'all' : 'veg')}
-              className={`px-3 py-1 rounded-xl font-bold border transition-colors ${
+              className={`px-3.5 py-1.5 rounded-xl font-black border transition-all ${
                 selectedDiet === 'veg'
-                  ? 'bg-emerald-600/20 border-emerald-500 text-emerald-400'
-                  : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700'
+                  ? 'bg-emerald-500/20 border-emerald-500/40 text-neon-emerald shadow-neon-emerald'
+                  : 'glass-pill text-slate-300 hover:border-white/20'
               }`}
             >
               🌱 Veg Only
@@ -171,10 +174,10 @@ const Explore = () => {
 
             <button
               onClick={() => setSelectedDiet(selectedDiet === 'nonVeg' ? 'all' : 'nonVeg')}
-              className={`px-3 py-1 rounded-xl font-bold border transition-colors ${
+              className={`px-3.5 py-1.5 rounded-xl font-black border transition-all ${
                 selectedDiet === 'nonVeg'
-                  ? 'bg-rose-600/20 border-rose-500 text-rose-400'
-                  : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700'
+                  ? 'bg-rose-500/20 border-rose-500/40 text-neon-rose shadow-neon-rose'
+                  : 'glass-pill text-slate-300 hover:border-white/20'
               }`}
             >
               🍗 Non-Veg
@@ -183,32 +186,32 @@ const Explore = () => {
             {/* Rating 4.0+ */}
             <button
               onClick={() => setMinRating(minRating === '4' ? '' : '4')}
-              className={`px-3 py-1 rounded-xl font-bold border flex items-center gap-1 transition-colors ${
+              className={`px-3.5 py-1.5 rounded-xl font-black border flex items-center gap-1.5 transition-all ${
                 minRating === '4'
-                  ? 'bg-amber-500/20 border-amber-500 text-amber-400'
-                  : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700'
+                  ? 'bg-amber-500/20 border-amber-500/40 text-neon-amber shadow-neon-amber'
+                  : 'glass-pill text-slate-300 hover:border-white/20'
               }`}
             >
-              <Star size={12} className="fill-amber-400" />
+              <Star size={12} className="fill-neon-amber" />
               <span>4.0+ Stars</span>
             </button>
 
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="text-[11px] text-rose-400 hover:underline font-semibold ml-auto"
+                className="text-xs text-neon-rose hover:underline font-bold ml-auto"
               >
-                Clear Filters
+                Reset All Filters
               </button>
             )}
           </div>
         </div>
       )}
 
-      {/* Content Feed */}
+      {/* Content Feed Grid */}
       {loading ? (
-        <div className="py-20 flex justify-center">
-          <LoadingSpinner size="lg" message={`Finding top ${activeTab}...`} />
+        <div className="py-24 flex justify-center">
+          <LoadingSpinner size="lg" message={`Exploring top ${activeTab}...`} />
         </div>
       ) : activeTab === 'foods' ? (
         foods.length > 0 ? (
@@ -218,15 +221,15 @@ const Explore = () => {
             ))}
           </div>
         ) : (
-          <div className="py-20 text-center space-y-3 bg-slate-900/40 rounded-3xl border border-slate-800/80 p-8 max-w-md mx-auto">
-            <UtensilsCrossed size={40} className="mx-auto text-slate-600" />
-            <h3 className="text-lg font-bold text-white">No Dishes Found</h3>
+          <div className="py-20 text-center space-y-4 rounded-3xl glass-card border border-white/10 p-8 max-w-md mx-auto shadow-glass">
+            <UtensilsCrossed size={42} className="mx-auto text-slate-600" />
+            <h3 className="text-lg font-black text-white">No Dishes Found</h3>
             <p className="text-xs text-slate-400">
               Try adjusting your search terms or filters to find what you are craving.
             </p>
             <button
               onClick={clearFilters}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200"
+              className="px-5 py-2.5 rounded-2xl bg-white/10 hover:bg-white/15 text-xs font-bold text-white transition-colors"
             >
               Reset Filters
             </button>
@@ -239,9 +242,9 @@ const Explore = () => {
           ))}
         </div>
       ) : (
-        <div className="py-20 text-center space-y-3 bg-slate-900/40 rounded-3xl border border-slate-800/80 p-8 max-w-md mx-auto">
-          <Store size={40} className="mx-auto text-slate-600" />
-          <h3 className="text-lg font-bold text-white">No Restaurants Found</h3>
+        <div className="py-20 text-center space-y-4 rounded-3xl glass-card border border-white/10 p-8 max-w-md mx-auto shadow-glass">
+          <Store size={42} className="mx-auto text-slate-600" />
+          <h3 className="text-lg font-black text-white">No Restaurants Found</h3>
           <p className="text-xs text-slate-400">
             We couldn't find restaurants matching your search.
           </p>
